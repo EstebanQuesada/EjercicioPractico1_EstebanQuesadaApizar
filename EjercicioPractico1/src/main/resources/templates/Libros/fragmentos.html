@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragmentos</title>
+</head>
+<body>
+
+    <div th:replace="template :: header"></div>
+
+    <div id="main-content">
+        <h2>Listado de Libros</h2>
+        <table id="tabla-libros" class="table">
+
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Género</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpo-tabla">
+
+            </tbody>
+        </table>
+
+        <h2>Agregar Nuevo Libro</h2>
+        <form id="form-agregar">
+            <label>Título:</label>
+            <input type="text" id="titulo" required><br>
+            <label>Autor:</label>
+            <input type="text" id="autor" required><br>
+            <label>Género:</label>
+            <input type="text" id="genero" required><br>
+            <button type="submit" class="btn btn-success">Agregar Libro</button>
+        </form>
+    </div>
+
+    <script>
+        let libros = [
+            { id: 1, titulo: "Cien años de soledad", autor: "Gabriel García Márquez", genero: "Realismo mágico" },
+            { id: 2, titulo: "El señor de los anillos", autor: "J.R.R. Tolkien", genero: "Fantasía" }
+        ];
+
+
+        function mostrarLibros() {
+            let cuerpoTabla = document.getElementById("cuerpo-tabla");
+            cuerpoTabla.innerHTML = "";
+            libros.forEach(libro => {
+                let fila = `<tr>
+                                <td>${libro.titulo}</td>
+                                <td>${libro.autor}</td>
+                                <td>${libro.genero}</td>
+                                <td>
+                                    <button class="btn btn-primary" onclick="editarLibro(${libro.id})">Actualizar</button>
+                                    <button class="btn btn-danger" onclick="eliminarLibro(${libro.id})">Borrar</button>
+                                </td>
+                            </tr>`;
+                cuerpoTabla.innerHTML += fila;
+            });
+        }
+
+        function agregarLibro(event) {
+            event.preventDefault();
+            let titulo = document.getElementById("titulo").value;
+            let autor = document.getElementById("autor").value;
+            let genero = document.getElementById("genero").value;
+            let id = libros.length + 1; 
+            libros.push({ id: id, titulo: titulo, autor: autor, genero: genero });
+            mostrarLibros();
+            document.getElementById("form-agregar").reset();
+        }
+        function eliminarLibro(id) {
+            libros = libros.filter(libro => libro.id !== id);
+            mostrarLibros();
+        }
+        function editarLibro(id) {
+            console.log("Editar libro con ID:", id);
+        }
+        document.getElementById("form-agregar").addEventListener("submit", agregarLibro);
+
+        window.onload = function() {
+            mostrarLibros();
+        };
+    </script>
+</body>
+</html>
